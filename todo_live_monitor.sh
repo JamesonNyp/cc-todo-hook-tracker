@@ -136,10 +136,10 @@ start_monitoring() {
     
     # Choose monitoring method based on available tools
     if command -v inotifywait &> /dev/null; then
-        # Linux - use inotifywait (watch only the JSON file)
+        # Linux - use inotifywait with output properly handled
         while true; do
-            if inotifywait -e modify "$TODO_DATA_FILE" 2>/dev/null; then
-                sleep 0.2  # Slight delay for file write completion
+            # Run inotifywait and capture its exit status, suppress all output
+            if inotifywait -e modify "$TODO_DATA_FILE" &>/dev/null; then
                 update_todos
             fi
         done
