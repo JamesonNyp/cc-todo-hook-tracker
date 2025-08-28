@@ -1,0 +1,21 @@
+# Ignore local .claude directory
+.claude/
+
+# Test output files
+*.log
+*.tmp
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# PowerShell specific
+*.ps1.bak

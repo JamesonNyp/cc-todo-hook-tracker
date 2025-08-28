@@ -1,0 +1,24 @@
+{
+  "timestamp": "2025-08-28T10:30:45.123Z",
+  "session_id": "test-session-123",
+  "cwd": "/path/to/project",
+  "tool_response": {
+    "newTodos": [
+      {
+        "content": "Implement authentication system",
+        "status": "pending",
+        "activeForm": "Implementing authentication system"
+      },
+      {
+        "content": "Write unit tests",
+        "status": "in_progress",
+        "activeForm": "Writing unit tests"
+      },
+      {
+        "content": "Update documentation",
+        "status": "completed",
+        "activeForm": "Updating documentation"
+      }
+    ]
+  }
+}
