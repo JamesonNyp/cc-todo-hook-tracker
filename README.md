@@ -37,8 +37,8 @@ chmod +x todo_live_monitor.sh
 
 # Copy scripts to Claude Code scripts directory
 mkdir -p ~/.claude/scripts
-cp todo_hook_post_tool.sh ~/.claude/scripts/claude-todo-hook.sh
-cp todo_live_monitor.sh ~/.claude/scripts/todo-monitor.sh
+cp todo_hook_post_tool.sh ~/.claude/scripts/todo_hook_post_tool.sh
+cp todo_live_monitor.sh ~/.claude/scripts/todo_live_monitor.sh
 ```
 
 ### Step 2: Configure Claude Code Hook
@@ -50,7 +50,7 @@ cp todo_live_monitor.sh ~/.claude/scripts/todo-monitor.sh
 3. Add a new matcher: `TodoWrite`
 4. Add the hook command:
    ```bash
-   ~/.claude/scripts/claude-todo-hook.sh
+   ~/.claude/scripts/todo_hook_post_tool.sh
    ```
 5. Save to **User settings** to apply globally
 
@@ -67,7 +67,7 @@ Edit your `~/.claude/settings.json`:
         "hooks": [
           {
             "type": "command",
-            "command": "~/.claude/scripts/claude-todo-hook.sh"
+            "command": "~/.claude/scripts/todo_hook_post_tool.sh"
           }
         ]
       }
@@ -87,7 +87,7 @@ mkdir -p ~/.claude/logs
 
 1. **Start the Monitor**: In a separate terminal window, run:
    ```bash
-   ~/.claude/scripts/todo-monitor.sh
+   ~/.claude/scripts/todo_live_monitor.sh
    # Or if running from repo directory:
    ./todo_live_monitor.sh
    ```
@@ -121,8 +121,8 @@ mkdir -p ~/.claude/logs
 ├── logs/
 │   └── current_todos.json      # Current todo state data
 └── scripts/
-    ├── claude-todo-hook.sh     # PostToolUse hook script
-    └── todo-monitor.sh         # Live monitoring display script
+    ├── todo_hook_post_tool.sh  # PostToolUse hook script
+    └── todo_live_monitor.sh    # Live monitoring display script
 ```
 
 ## Troubleshooting
