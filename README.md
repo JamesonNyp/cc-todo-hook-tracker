@@ -4,153 +4,92 @@ A real-time todo monitoring system for Claude Code that displays live updates of
 
 ![Claude Code Todo Tracker Live Monitor](Todo%20Tracker.png)
 
+## Overview
+
+This project provides scripts that integrate with Claude Code's hook system to capture and display todo updates in real-time. When Claude Code uses its TodoWrite tool, these scripts intercept the data and provide a live monitoring dashboard showing the current state of all todos.
+
 ## Features
 
 - 🔄 **Live Updates**: Automatically refreshes when Claude Code modifies todos
 - 🎨 **Color-Coded Status**: Visual indicators for different todo states
-  - ✅ Green strikethrough for completed items
-  - ▶️ Blue bold for active/in-progress items  
-  - ○ Normal text for pending items
+  - ✅ Green for completed items
+  - ▶️ Blue for active/in-progress items  
+  - ○ Default for pending items
 - 📊 **Session Tracking**: Displays session ID and working directory
-- ⚡ **Efficient Monitoring**: Uses native file watching (inotify/fswatch) for minimal resource usage
-
-## Prerequisites
-
-- Claude Code CLI installed
-- `jq` for JSON parsing: 
-  - Linux: `sudo apt install jq`
-  - macOS: `brew install jq`
-- Optional (recommended for better performance):
-  - Linux: `sudo apt install inotify-tools`
-  - macOS: `brew install fswatch`
-
-## Installation
-
-### Step 1: Clone and Setup Scripts
-
-```bash
-# Clone this repository
-git clone https://github.com/JamesonNyp/cc-todo-hook-tracker.git
-cd cc-todo-hook-tracker
-
-# Make scripts executable
-chmod +x todo_hook_post_tool.sh
-chmod +x todo_live_monitor.sh
-
-# Copy scripts to Claude Code scripts directory
-mkdir -p ~/.claude/scripts
-cp todo_hook_post_tool.sh ~/.claude/scripts/todo_hook_post_tool.sh
-cp todo_live_monitor.sh ~/.claude/scripts/todo_live_monitor.sh
-```
-
-### Step 2: Configure Claude Code Hook
-
-#### Option A: Using Claude Code CLI
-
-1. In Claude Code, run the `/hooks` command
-2. Select **PostToolUse** hook event
-3. Add a new matcher: `TodoWrite`
-4. Add the hook command:
-   ```bash
-   ~/.claude/scripts/todo_hook_post_tool.sh
-   ```
-5. Save to **User settings** to apply globally
-
-#### Option B: Manual Configuration
-
-Edit your `~/.claude/settings.json`:
-
-```json
-{
-  "hooks": {
-    "PostToolUse": [
-      {
-        "matcher": "TodoWrite",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "~/.claude/scripts/todo_hook_post_tool.sh"
-          }
-        ]
-      }
-    ]
-  }
-}
-```
-
-### Step 3: Create Required Directories
-
-```bash
-# Create logs directory for todo data
-mkdir -p ~/.claude/logs
-```
-
-## Usage
-
-1. **Start the Monitor**: In a separate terminal window, run:
-   ```bash
-   ~/.claude/scripts/todo_live_monitor.sh
-   # Or if running from repo directory:
-   ./todo_live_monitor.sh
-   ```
-
-2. **Work with Claude Code**: In another terminal, use Claude Code normally. Any task that triggers the TodoWrite tool will automatically update the monitor.
-
-3. **View Live Updates**: The monitor will show:
-   - Session information and working directory
-   - Real-time todo list with color-coded status
-   - Timestamp of last update
-   - Total count of todos
+- ⚡ **Efficient Monitoring**: Uses native file watching for minimal resource usage
+- 🌍 **Cross-Platform**: Available in both Bash and PowerShell implementations
 
 ## How It Works
 
-1. **Hook Script** (`todo_hook_post_tool.sh`):
-   - Intercepts PostToolUse events for TodoWrite
-   - Extracts todo data from the tool response
+1. **Hook Script**: Intercepts PostToolUse events for TodoWrite
+   - Captures todo data from Claude Code
+   - Extracts relevant information (todos, session, directory)
    - Saves formatted JSON to `~/.claude/logs/current_todos.json`
 
-2. **Monitor Script** (`todo_live_monitor.sh`):
+2. **Monitor Script**: Displays live todo updates
    - Watches the JSON file for changes
    - Parses and displays todos with color coding
-   - Updates display in place without scrolling
-   - Uses efficient file watching (inotify/fswatch) or falls back to polling
+   - Updates display in real-time
+   - Uses efficient file watching mechanisms
 
-## File Structure
+## Available Implementations
 
+### Bash Version (`bash/`)
+- Works on Linux, macOS, and WSL2 (not native Windows)
+- Requires `jq` for JSON parsing
+- Optionally uses `inotifywait` (Linux) or `fswatch` (macOS) for file monitoring
+- See [README-sh.md](README-sh.md) for setup instructions
+
+### PowerShell 7 Version (`powershell7/`) - Recommended for Cross-Platform Use
+- **Truly cross-platform**: Runs natively on Windows, macOS, and Linux
+- No external dependencies required
+- Built-in JSON parsing and file watching
+- While PowerShell may seem unfamiliar to Unix users, it solves many traditional shell scripting limitations:
+  - Consistent behavior across all platforms
+  - Structured data handling (objects vs text streams)
+  - No need for external tools like `jq`, `sed`, or `awk`
+  - Robust error handling and debugging
+- See [README-ps.md](README-ps.md) for setup instructions
+
+## Project Structure
+
+```
+cc-todo-hook-tracker/
+├── README.md           # This file
+├── README-sh.md        # Bash setup guide
+├── README-ps.md        # PowerShell setup guide
+├── TESTING-ps.md       # PowerShell testing guide
+├── Todo Tracker.png    # Screenshot of the monitor
+├── bash/               # Bash implementation
+│   ├── todo_hook_post_tool.sh
+│   └── todo_live_monitor.sh
+└── powershell7/        # PowerShell 7 implementation
+    ├── todo_hook_post_tool.ps1
+    ├── todo_live_monitor.ps1
+    └── tests/          # Test scripts
+```
+
+## Quick Start
+
+1. Choose your preferred implementation:
+   - **Bash**: Follow [README-sh.md](README-sh.md)
+   - **PowerShell 7**: Follow [README-ps.md](README-ps.md)
+
+2. Configure Claude Code hooks to use the appropriate script
+
+3. Start the monitor in a separate terminal
+
+4. Use Claude Code normally - todos will appear automatically!
+
+## File Storage
+
+Both implementations use the same file structure:
 ```
 ~/.claude/
 ├── settings.json               # Claude Code configuration
 ├── logs/
 │   └── current_todos.json      # Current todo state data
-└── scripts/
-    ├── todo_hook_post_tool.sh  # PostToolUse hook script
-    └── todo_live_monitor.sh    # Live monitoring display script
-```
-
-## Troubleshooting
-
-### Monitor not updating
-- Verify hook is registered: Run `/hooks` in Claude Code
-- Check if `~/.claude/logs/current_todos.json` is being created
-- Ensure scripts have execute permissions
-
-### Colors not displaying
-- Ensure your terminal supports ANSI color codes
-- Try running in a different terminal emulator
-
-### High CPU usage
-- Install `inotify-tools` (Linux) or `fswatch` (macOS or Linux) for efficient file watching
-- Without these tools, the script falls back to polling which uses more resources
-
-## Customization
-
-You can modify the color scheme by editing the ANSI color codes in `todo_live_monitor.sh`:
-
-```bash
-GREEN='\033[0;32m'   # Completed items
-BLUE='\033[0;34m'    # Active items
-YELLOW='\033[1;33m'  # Warnings
-CYAN='\033[0;36m'    # Headers
+└── scripts/                    # (Optional) Script installation location
 ```
 
 ## License
@@ -163,4 +102,5 @@ Contributions are welcome! Please feel free to submit pull requests or open issu
 
 ## Author
 
-Created by Jameson Nyp (@JamesonNyp)
+Originally created by Jameson Nyp (@JamesonNyp)
+PowerShell implementation by Dimension Zero (@dimension-zero)
