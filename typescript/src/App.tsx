@@ -167,6 +167,9 @@ function App() {
         <div className="project-list">
           {sortProjects(projects).map((project, idx) => {
             const totalTodos = project.sessions.reduce((sum, s) => sum + s.todos.length, 0);
+            const mostRecentDate = project.sessions.length > 0 
+              ? Math.max(...project.sessions.map(s => s.lastModified.getTime()))
+              : 0;
             const isSelected = selectedProject?.path === project.path;
             
             return (
@@ -179,8 +182,17 @@ function App() {
                   {project.path.split(/[\\\/]/).pop() || project.path}
                 </div>
                 <div className="project-meta">
-                  <span className="session-count">{project.sessions.length} sessions</span>
-                  <span className="todo-count">{totalTodos} todos</span>
+                  <div className="meta-row">
+                    <span className="session-count">{project.sessions.length} sessions</span>
+                    <span className="todo-count">{totalTodos} todos</span>
+                  </div>
+                  {mostRecentDate > 0 && (
+                    <div className="meta-row">
+                      <span className="recent-date">
+                        Last: {new Date(mostRecentDate).toLocaleDateString()}
+                      </span>
+                    </div>
+                  )}
                 </div>
               </div>
             );

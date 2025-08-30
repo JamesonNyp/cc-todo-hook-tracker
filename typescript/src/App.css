@@ -158,9 +158,21 @@ body {
 
 .project-meta {
   display: flex;
-  gap: 12px;
+  flex-direction: column;
+  gap: 2px;
   font-size: 12px;
   opacity: 0.7;
+}
+
+.meta-row {
+  display: flex;
+  gap: 12px;
+}
+
+.project-meta .recent-date {
+  font-weight: 600;
+  color: #8e9297;
+  font-size: 11px;
 }
 
 /* Main content */
