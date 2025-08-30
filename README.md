@@ -51,6 +51,18 @@ This project provides scripts that integrate with Claude Code's hook system to c
   - Robust error handling and debugging
 - See [README-ps.md](README-ps.md) for setup instructions
 
+### TypeScript/Electron GUI Version (`typescript/`) - Desktop Application
+- **Modern Desktop GUI**: Slack-like interface with dark theme
+- **Cross-platform**: Runs as a native desktop app on Windows, macOS, and Linux
+- **Advanced Features**:
+  - Real-time monitoring of all Claude Code sessions across projects
+  - Tri-state toggle controls for sorting and spacing customization
+  - Session tabs with automatic deduplication
+  - Auto-refresh every 5 seconds
+  - Visual status indicators and progress tracking
+- **Easy Installation**: `npm install` and `npm start` to run
+- See [typescript/README.md](typescript/README.md) for setup instructions
+
 ## Project Structure
 
 ```
@@ -63,27 +75,34 @@ cc-todo-hook-tracker/
 ├── bash/               # Bash implementation
 │   ├── todo_hook_post_tool.sh
 │   └── todo_live_monitor.sh
-└── powershell7/        # PowerShell 7 implementation
-    ├── todo_hook_post_tool.ps1
-    ├── todo_live_monitor.ps1
-    └── tests/          # Test scripts
+├── powershell7/        # PowerShell 7 implementation
+│   ├── todo_hook_post_tool.ps1
+│   ├── todo_live_monitor.ps1
+│   └── tests/          # Test scripts
+└── typescript/         # Electron GUI implementation
+    ├── src/            # React/TypeScript source
+    ├── package.json    # Node dependencies
+    └── README.md       # GUI setup guide
 ```
 
 ## Quick Start
 
 1. Choose your preferred implementation:
-   - **Bash**: Follow [README-sh.md](README-sh.md)
-   - **PowerShell 7**: Follow [README-ps.md](README-ps.md)
+   - **Terminal (Bash)**: Follow [README-sh.md](README-sh.md)
+   - **Terminal (PowerShell 7)**: Follow [README-ps.md](README-ps.md)
+   - **Desktop GUI (Electron)**: Follow [typescript/README.md](typescript/README.md)
 
-2. Configure Claude Code hooks to use the appropriate script
+2. Configure Claude Code hooks to use the appropriate script (for terminal versions)
 
-3. Start the monitor in a separate terminal
+3. Start the monitor:
+   - Terminal versions: Run monitor script in a separate terminal
+   - GUI version: Launch the Electron app
 
 4. Use Claude Code normally - todos will appear automatically!
 
 ## File Storage
 
-Both implementations use the same file structure:
+All implementations use the same file structure:
 ```
 ~/.claude/
 ├── settings.json               # Claude Code configuration
